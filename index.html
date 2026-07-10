@@ -86,20 +86,18 @@
   margin-bottom: 16px;
 
   display: inline-block;
-  white-space: nowrap;
   overflow: hidden;
   border-right: 2px solid var(--accent);
-  width: 0;
+
+  white-space: nowrap;
+  max-width: max-content;
 
   animation:
     typing 3s steps(55, end) forwards,
-    blink 0.8s step-end 4, 
-    hideCursor 0s forwards;
-  
-    animation-delay:
-        0s,
-        0s,
+    blink .7s step-end 4,
+    hideCursor 0s 3s forwards;
 }
+
 @keyframes hideCursor{
   to{
     border-right-color: transparent;
@@ -116,7 +114,7 @@
   opacity: 0;
   transform: translateY(-50px);
   animation: fadeDown 1s ease forwards;
-  animation-delay: 3.2s;
+  animation-delay: 2.2s;
 }
 
 .hero h1 .accent {
@@ -136,7 +134,7 @@
   opacity: 0;
   transform: translateY(50px);
   animation: slideUp 1s ease forwards;
-  animation-delay: 3.6s;
+  animation-delay: 2.6s;
 }
 
 /* Buttons - Optional animation */
@@ -160,7 +158,7 @@
     width: 0;
   }
   to {
-    width: fit-content;
+     max-width: fit-content;
   }
 }
 
