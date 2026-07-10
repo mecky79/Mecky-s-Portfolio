@@ -205,59 +205,217 @@
   .case-metric span { font-size: 0.75rem; color: var(--text-dim); }
 
   /* ---------- PROJECTS ---------- */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 2fr));
-    gap: 28px;
-  }
-  .project-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: border-color 0.15s ease, transform 0.15s ease;
-  }
-  .project-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-4px);
-  }
-  .project-thumb {
-    height: 190px;
-    background: linear-gradient(135deg, var(--bg-alt), var(--surface));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-dim);
-    font-size: 0.85rem;
-    border-bottom: 1px solid var(--border);
-    /* Replace with <img src="..."> or a real screenshot */
-  }
-  .project-body { padding: 24px; display:flex; flex-direction:column; gap:12px; flex:1; }
-  .project-tag {
-    color: var(--accent);
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .project-body h3 { font-size: 1.25rem; }
-  .project-body p { color: var(--text-dim); font-size: 0.95rem; flex:1; }
-  .project-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 4px;
-  }
-  .project-stack span {
-    font-size: 0.75rem;
-    padding: 4px 10px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--text-dim);
-  }
-  .project-links { display:flex; align-items: center;  gap:16px; margin-top: 8px; font-size: 0.9rem; }
+   .projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 2fr));
+  gap: 28px;
+}
 
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.project-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+}
+
+/* ===== THUMBNAIL WITH OVERLAY ===== */
+.project-thumb {
+  position: relative; /* ADDED: for overlay positioning */
+  height: 190px;
+  background: linear-gradient(135deg, var(--bg-alt), var(--surface));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden; /* ADDED: crops image */
+  cursor: pointer; /* ADDED: indicates clickable */
+}
+
+.project-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ADDED: crops image to fill container */
+  object-position: top; /* ADDED: shows top portion first */
+  transition: transform 0.4s ease; /* ADDED: smooth zoom on hover */
+}
+
+.project-thumb:hover img {
+  transform: scale(1.05); /* ADDED: subtle zoom on hover */
+}
+
+/* THUMBNAIL OVERLAY (appears on hover) */
+.thumb-overlay {
+  position: absolute; /* ADDED: covers the image */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; /* ADDED: hidden by default */
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px); /* ADDED: blur effect */
+}
+
+.project-thumb:hover .thumb-overlay {
+  opacity: 1; /* ADDED: appears on hover */
+}
+
+.thumb-overlay span {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 10px 22px;
+  border-radius: 30px;
+  color: white;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  font-weight: 500;
+}
+
+/* ===== PROJECT BODY (unchanged) ===== */
+.project-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.project-tag {
+  color: var(--accent);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.project-body h3 {
+  font-size: 1.25rem;
+}
+
+.project-body p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+.project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.project-stack span {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-dim);
+}
+
+.project-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+/* ===== OVERLAY MODAL (Fullscreen expanded view) ===== */
+.overlay-modal {
+  display: none; /* ADDED: hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  animation: fadeIn 0.3s ease;
+}
+
+.overlay-modal.active {
+  display: flex; /* ADDED: shown when active class is added */
+}
+
+.overlay-modal img {
+  max-width: 92%;
+  max-height: 88%;
+  border-radius: 12px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  object-fit: contain;
+}
+
+.close-btn {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  color: white;
+  font-size: 2.8rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  font-weight: 300;
+  line-height: 1;
+  z-index: 1001;
+}
+
+.close-btn:hover {
+  transform: rotate(90deg);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .project-thumb {
+    height: 160px;
+  }
+  
+  .overlay-modal {
+    padding: 20px;
+  }
+  
+  .overlay-modal img {
+    max-width: 100%;
+    max-height: 75%;
+  }
+  
+  .close-btn {
+    top: 18px;
+    right: 22px;
+    font-size: 2.2rem;
+  }
+  
+  .thumb-overlay span {
+    font-size: 0.75rem;
+    padding: 8px 16px;
+  }
+}
   /* ---------- SKILLS ---------- */
   .skills-grid {
     display: grid;
@@ -398,7 +556,12 @@
 
       <!-- Project 1: Bakes and Bites -->
       <div class="project-card">
-        <div class="project-thumb">[ screenshot / GIF placeholder ]</div>
+        <div class="project-thumb" onclick="openOverlay(this)">
+          <img src="screenshot1.webp" alt="Bakes and Bites dashboard screenshot">
+          <div class="thumb-overlay">
+            <span>🔍 Click to expand</span>
+          </div>
+        </div>
         <div class="project-body">
           <div class="project-tag">Food delivery platform</div>
           <h3>Bakes and Bites</h3>
@@ -407,7 +570,7 @@
             <span>JavaScript</span><span>Supabase</span><span>Realtime</span><span>Edge Functions</span>
           </div>
           <div class="project-links">
-            <a href="https://mecky.pages.dev/" target="_blank"  rel="noopener noreferrer">Live demo →</a>
+            <a href="https://mecky.pages.dev/" target="_blank" rel="noopener noreferrer">Live demo →</a>
             <a href="#">Code →</a>
           </div>
         </div>
@@ -415,7 +578,11 @@
 
       <!-- Project 2: DCP Skiza Wakenya -->
       <div class="project-card">
-        <div class="project-thumb">
+        <div class="project-thumb" onclick="openOverlay(this)">
+          <img src="screenshot2.webp" alt="DCP Skiza Wakenya campaign dashboard">
+          <div class="thumb-overlay">
+            <span>🔍 Click to expand</span>
+          </div>
         </div>
         <div class="project-body">
           <div class="project-tag">Campaign platform</div>
@@ -430,10 +597,15 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
+
+<!-- OVERLAY MODAL -->
+<div id="imageOverlay" class="overlay-modal" onclick="closeOverlay()">
+  <span class="close-btn">&times;</span>
+  <img id="expandedImage" src="" alt="Expanded screenshot" />
+</div>
 
 <!-- ---------- SKILLS ---------- -->
 <section id="skills">
@@ -488,6 +660,39 @@
 </footer>
 
 <script>
+  function openOverlay(thumbElement) {
+  const overlay = document.getElementById('imageOverlay');
+  const expandedImg = document.getElementById('expandedImage');
+  
+  // Find the img inside the clicked thumb
+  const img = thumbElement.querySelector('img');
+  if (img) {
+    expandedImg.src = img.src;
+    expandedImg.alt = img.alt;
+  }
+  
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden'; // Prevent scrolling
+}
+
+function closeOverlay() {
+  const overlay = document.getElementById('imageOverlay');
+  overlay.classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+// Close overlay with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeOverlay();
+  }
+});
+
+// Close overlay when clicking the close button
+document.querySelector('.close-btn').addEventListener('click', function(e) {
+  e.stopPropagation(); // Prevent triggering overlay close twice
+  closeOverlay();
+});
   document.getElementById('year').textContent = new Date().getFullYear();
 </script>
 
